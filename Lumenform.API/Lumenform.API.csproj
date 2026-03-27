@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>LumenformCore</RootNamespace>
+      <UserSecretsId>1f9bc346-4231-4e92-b677-67a75768811d</UserSecretsId>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+          <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Scalar.AspNetCore" Version="2.12.14" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Lumenform.Application\Lumenform.Application.csproj" />
+      <ProjectReference Include="..\Lumenform.Infrastructure\Lumenform.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

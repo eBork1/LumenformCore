@@ -1,0 +1,33 @@
+# Build outputs
+bin/
+obj/
+
+# User secrets & local settings
+**/appsettings.Local.json
+**/appsettings.*.local.json
+
+# Rider / JetBrains
+.idea/
+*.DotSettings.user
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS Code
+.vscode/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

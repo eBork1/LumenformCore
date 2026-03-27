@@ -1,0 +1,6 @@
+@LumenformCore_HostAddress = http://localhost:5118
+
+GET {{LumenformCore_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
