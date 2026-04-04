@@ -85,7 +85,6 @@ public class CohortsController : BaseApiController
         }
     }
 
-
     [HttpDelete("{id}/members/{membershipId}")]
     [Authorize]
     [Authorize(Policy = "Coordinator")]
@@ -117,6 +116,7 @@ public class CohortsController : BaseApiController
 
     [HttpGet("{id}/events")]
     [Authorize]
+    [Authorize(Policy = "Member")]
     public async Task<ActionResult<IEnumerable<CohortEventDto>>> GetCohortEvents(
         Guid id,
         CancellationToken cancellationToken)
@@ -134,6 +134,7 @@ public class CohortsController : BaseApiController
 
     [HttpPost("{id}/events")]
     [Authorize]
+    [Authorize(Policy = "Coordinator")]
     public async Task<ActionResult<CohortEventDto>> AddEvent(
         Guid id,
         CreateCohortEventDto dto,
@@ -152,6 +153,7 @@ public class CohortsController : BaseApiController
 
     [HttpPut("{id}/events/{eventId}")]
     [Authorize]
+    [Authorize(Policy = "Coordinator")]
     public async Task<ActionResult<CohortEventDto>> UpdateEvent(
         Guid id,
         Guid eventId,
@@ -171,6 +173,7 @@ public class CohortsController : BaseApiController
 
     [HttpPost("{id}/events/{eventId}/cancel")]
     [Authorize]
+    [Authorize(Policy = "Coordinator")]
     public async Task<ActionResult> CancelEvent(
         Guid id,
         Guid eventId,
@@ -189,6 +192,7 @@ public class CohortsController : BaseApiController
 
     [HttpPost("{id}/events/{eventId}/complete")]
     [Authorize]
+    [Authorize(Policy = "Coordinator")]
     public async Task<ActionResult> CompleteEvent(
         Guid id,
         Guid eventId,
