@@ -11,6 +11,7 @@ public class Assignment : Entity
     public Guid CreatedByUserId { get; private set; }
     public bool IsTemplate { get; private set; }
     public DateTime? DueDate { get; private set; } // Can be used for "IsMandatory"
+    public bool SubmissionRequired { get; private set; }
     
     // Navigation properties
     public Cohort? Cohort { get; private set; }
@@ -34,6 +35,7 @@ public class Assignment : Entity
         string content,
         Guid cohortId,
         Guid createdByUserId,
+        bool submissionRequired,
         DateTime? dueDate = null)
     {
         if (string.IsNullOrWhiteSpace(title))
@@ -49,7 +51,8 @@ public class Assignment : Entity
             CohortId = cohortId,
             CreatedByUserId = createdByUserId,
             IsTemplate = false,
-            DueDate = dueDate
+            DueDate = dueDate,
+            SubmissionRequired =  submissionRequired
         };
     }
 
@@ -57,7 +60,8 @@ public class Assignment : Entity
     public static Assignment CreateTemplate(
         string title,
         string content,
-        Guid createdByUserId)
+        Guid createdByUserId,
+        bool submissionRequired)
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new DomainException("Assignment title cannot be empty");
@@ -72,17 +76,18 @@ public class Assignment : Entity
             CohortId = null,
             CreatedByUserId = createdByUserId,
             IsTemplate = true,
-            DueDate = null
+            DueDate = null,
+            SubmissionRequired = submissionRequired
         };
     }
 
     // Clone template into cohort assignment
-    public Assignment CloneToCohort(Guid cohortId, DateTime? dueDate = null)
+    public Assignment CloneToCohort(Guid cohortId, bool submissionRequired, DateTime? dueDate = null)
     {
         if (!IsTemplate)
             throw new DomainException("Can only clone templates");
 
-        var clonedAssignment = Create(Title, Content, cohortId, CreatedByUserId, dueDate);
+        var clonedAssignment = Create(Title, Content, cohortId, CreatedByUserId, submissionRequired, dueDate);
         
         // Clone tasks
         foreach (var task in _tasks.OrderBy(t => t.Order))

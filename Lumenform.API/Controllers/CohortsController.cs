@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lumenform.API.Controllers;
 
-[Authorize]
 public class CohortsController : BaseApiController
 {
     private readonly CohortService _cohortService;
@@ -32,13 +31,12 @@ public class CohortsController : BaseApiController
         return Ok(cohorts);
     }
 
-    [HttpGet("{id}")]
-    [Authorize]
+    [HttpGet("{cohortId}")]
     [Authorize(Policy = "Member")]
-    public async Task<ActionResult<CohortDetailDtoWithUserInfo>> GetCohort(Guid id, CancellationToken cancellationToken)
+    public async Task<ActionResult<CohortDetailDtoWithUserInfo>> GetCohort(Guid cohortId, CancellationToken cancellationToken)
     {
         var userId = GetCurrentUserId();
-        var cohort = await _cohortService.GetCohortByIdAsync(id, userId, cancellationToken);
+        var cohort = await _cohortService.GetCohortByIdAsync(cohortId, userId, cancellationToken);
 
         if (cohort == null)
             return NotFound();
@@ -46,17 +44,16 @@ public class CohortsController : BaseApiController
         return Ok(cohort);
     }
 
-    [HttpPost("{id}/members")]
-    [Authorize]
+    [HttpPost("{cohortId}/members")]
     [Authorize(Policy = "Coordinator")]
     public async Task<ActionResult<CohortMemberDto>> AddMember(
-        Guid id,
+        Guid cohortId,
         AddMemberDto dto,
         CancellationToken cancellationToken)
     {
         try
         {
-            var member = await _cohortMemberService.AddMemberAsync(id, dto, cancellationToken);
+            var member = await _cohortMemberService.AddMemberAsync(cohortId, dto, cancellationToken);
             return Ok(member);
         }
         catch (Exception ex)
@@ -65,18 +62,17 @@ public class CohortsController : BaseApiController
         }
     }
 
-    [HttpPost("{id}/members/{membershipId}/reactivate")]
-    [Authorize]
+    [HttpPost("{cohortId}/members/{membershipId}/reactivate")]
     [Authorize(Policy = "Coordinator")]
     public async Task<ActionResult<CohortMemberDto>> ReactivateMember(
-        Guid id,
+        Guid cohortId,
         Guid membershipId,
         CancellationToken cancellationToken)
     {
         try
         {
             var reactivatedMember = await _cohortMemberService
-                .ReactivateMemberAsync(id, membershipId, cancellationToken);
+                .ReactivateMemberAsync(cohortId, membershipId, cancellationToken);
             return Ok(reactivatedMember);
         }
         catch (Exception ex)
@@ -85,17 +81,16 @@ public class CohortsController : BaseApiController
         }
     }
 
-    [HttpDelete("{id}/members/{membershipId}")]
-    [Authorize]
+    [HttpDelete("{cohortId}/members/{membershipId}")]
     [Authorize(Policy = "Coordinator")]
     public async Task<ActionResult> RemoveMember(
-        Guid id,
+        Guid cohortId,
         Guid membershipId,
         CancellationToken cancellationToken)
     {
         try
         {
-            await _cohortMemberService.WithdrawMemberAsync(id, membershipId, cancellationToken);
+            await _cohortMemberService.WithdrawMemberAsync(cohortId, membershipId, cancellationToken);
             return NoContent();
         }
         catch (Exception ex)
@@ -111,19 +106,18 @@ public class CohortsController : BaseApiController
         var userId = GetCurrentUserId();
         var cohort = await _cohortService.CreateCohortAsync(dto, userId, cancellationToken);
 
-        return CreatedAtAction(nameof(GetCohort), new { id = cohort.Id }, cohort);
+        return CreatedAtAction(nameof(GetCohort), new { cohortId = cohort.Id }, cohort);
     }
 
-    [HttpGet("{id}/events")]
-    [Authorize]
+    [HttpGet("{cohortId}/events")]
     [Authorize(Policy = "Member")]
     public async Task<ActionResult<IEnumerable<CohortEventDto>>> GetCohortEvents(
-        Guid id,
+        Guid cohortId,
         CancellationToken cancellationToken)
     {
         try
         {
-            var events = await _cohortEventService.GetCohortEventsAsync(id, cancellationToken);
+            var events = await _cohortEventService.GetCohortEventsAsync(cohortId, cancellationToken);
             return Ok(events);
         }
         catch (Exception ex)
@@ -132,17 +126,16 @@ public class CohortsController : BaseApiController
         }
     }
 
-    [HttpPost("{id}/events")]
-    [Authorize]
+    [HttpPost("{cohortId}/events")]
     [Authorize(Policy = "Coordinator")]
     public async Task<ActionResult<CohortEventDto>> AddEvent(
-        Guid id,
+        Guid cohortId,
         CreateCohortEventDto dto,
         CancellationToken cancellationToken)
     {
         try
         {
-            var cohortEvent = await _cohortEventService.AddEventAsync(id, dto, cancellationToken);
+            var cohortEvent = await _cohortEventService.AddEventAsync(cohortId, dto, cancellationToken);
             return Ok(cohortEvent);
         }
         catch (Exception ex)
@@ -151,18 +144,17 @@ public class CohortsController : BaseApiController
         }
     }
 
-    [HttpPut("{id}/events/{eventId}")]
-    [Authorize]
+    [HttpPut("{cohortId}/events/{eventId}")]
     [Authorize(Policy = "Coordinator")]
     public async Task<ActionResult<CohortEventDto>> UpdateEvent(
-        Guid id,
+        Guid cohortId,
         Guid eventId,
         UpdateCohortEventDto dto,
         CancellationToken cancellationToken)
     {
         try
         {
-            var cohortEvent = await _cohortEventService.UpdateEventAsync(id, eventId, dto, cancellationToken);
+            var cohortEvent = await _cohortEventService.UpdateEventAsync(cohortId, eventId, dto, cancellationToken);
             return Ok(cohortEvent);
         }
         catch (Exception ex)
@@ -171,17 +163,16 @@ public class CohortsController : BaseApiController
         }
     }
 
-    [HttpPost("{id}/events/{eventId}/cancel")]
-    [Authorize]
+    [HttpPost("{cohortId}/events/{eventId}/cancel")]
     [Authorize(Policy = "Coordinator")]
     public async Task<ActionResult> CancelEvent(
-        Guid id,
+        Guid cohortId,
         Guid eventId,
         CancellationToken cancellationToken)
     {
         try
         {
-            await _cohortEventService.CancelEventAsync(id, eventId, cancellationToken);
+            await _cohortEventService.CancelEventAsync(cohortId, eventId, cancellationToken);
             return NoContent();
         }
         catch (Exception ex)
@@ -190,17 +181,16 @@ public class CohortsController : BaseApiController
         }
     }
 
-    [HttpPost("{id}/events/{eventId}/complete")]
-    [Authorize]
+    [HttpPost("{cohortId}/events/{eventId}/complete")]
     [Authorize(Policy = "Coordinator")]
     public async Task<ActionResult> CompleteEvent(
-        Guid id,
+        Guid cohortId,
         Guid eventId,
         CancellationToken cancellationToken)
     {
         try
         {
-            await _cohortEventService.CompleteEventAsync(id, eventId, cancellationToken);
+            await _cohortEventService.CompleteEventAsync(cohortId, eventId, cancellationToken);
             return NoContent();
         }
         catch (Exception ex)

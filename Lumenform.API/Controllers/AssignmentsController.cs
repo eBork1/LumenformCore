@@ -4,9 +4,9 @@ using LumenformCore.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Lumenform.Controllers;
+namespace Lumenform.API.Controllers;
 
-[Authorize]
+[Route("api/cohorts/{cohortId}/assignments")]
 public class AssignmentsController : BaseApiController
 {
     private readonly AssignmentService _assignmentService;
@@ -17,6 +17,7 @@ public class AssignmentsController : BaseApiController
     }
 
     [HttpGet("{id}")]
+    [Authorize(Policy = "Member")] 
     public async Task<ActionResult<AssignmentDto>> GetAssignment(Guid id, CancellationToken cancellationToken)
     {
         var assignment = await _assignmentService.GetAssignmentByIdAsync(id, cancellationToken);
@@ -27,27 +28,21 @@ public class AssignmentsController : BaseApiController
         return Ok(assignment);
     }
 
-    [HttpGet("cohort/{cohortId}")]
+    [HttpGet]
+    [Authorize(Policy = "Member")] 
     public async Task<ActionResult<IEnumerable<AssignmentDto>>> GetCohortAssignments(Guid cohortId, CancellationToken cancellationToken)
     {
         var assignments = await _assignmentService.GetCohortAssignmentsAsync(cohortId, cancellationToken);
         return Ok(assignments);
     }
 
-    [HttpGet("templates")]
-    public async Task<ActionResult<IEnumerable<AssignmentDto>>> GetMyTemplates(CancellationToken cancellationToken)
-    {
-        var userId = GetCurrentUserId();
-        var templates = await _assignmentService.GetMyTemplatesAsync(userId, cancellationToken);
-        return Ok(templates);
-    }
-
     [HttpPost]
-    public async Task<ActionResult<AssignmentDto>> CreateAssignment(CreateAssignmentDto dto, CancellationToken cancellationToken)
+    [Authorize(Policy = "Coordinator")]
+    public async Task<ActionResult<AssignmentDto>> CreateAssignment(Guid cohortId, CreateAssignmentDto dto, CancellationToken cancellationToken)
     {
         var userId = GetCurrentUserId();
-        var assignment = await _assignmentService.CreateAssignmentAsync(dto, userId, cancellationToken);
+        var assignment = await _assignmentService.CreateAssignmentAsync(dto, cohortId, userId, cancellationToken);
         
-        return CreatedAtAction(nameof(GetAssignment), new { id = assignment.Id }, assignment);
+        return CreatedAtAction(nameof(GetAssignment), new {cohortId, id = assignment.Id }, assignment);
     }
 }

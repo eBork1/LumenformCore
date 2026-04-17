@@ -28,8 +28,8 @@ public class CohortRoleHandler : AuthorizationHandler<CohortRoleRequirement>
             return;
         }
 
-        if (!httpContext.Request.RouteValues.TryGetValue("id", out var cohortIdObj) 
-            || !Guid.TryParse(cohortIdObj?.ToString(), out var cohortId))
+        var cohortIdObj = httpContext.Request.RouteValues.GetValueOrDefault("cohortId");
+        if (!Guid.TryParse(cohortIdObj?.ToString(), out var cohortId))
         {
             context.Fail();
             return;

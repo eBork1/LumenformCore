@@ -8,7 +8,7 @@ public abstract class Entity
 
     protected Entity()
     {
-        //Id = Guid.NewGuid();
+        Id = Guid.NewGuid();
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
     }

@@ -5,7 +5,6 @@ using Lumenform.Infrastructure.Persistence;
 using LumenformCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
@@ -30,11 +29,6 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(/*...*/)
-        .LogTo(Console.WriteLine, LogLevel.Information)  // ← Add this
-        .EnableSensitiveDataLogging());  // ← And this for debugging
 
 // Add Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

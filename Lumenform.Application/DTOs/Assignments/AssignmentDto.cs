@@ -9,5 +9,6 @@ public record AssignmentDto(
     bool IsTemplate,
     Guid CreatedByUserId,
     DateTime CreatedAt,
-    int TaskCount
+    int TaskCount,
+    bool SubmissionRequired
 );

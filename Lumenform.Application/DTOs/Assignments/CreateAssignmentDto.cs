@@ -4,5 +4,7 @@ public record CreateAssignmentDto(
     string Title,
     string Content,
     Guid CohortId,
-    DateTime? DueDate
+    List<string>? Tasks,
+    DateTime? DueDate,
+    bool SubmissionRequired
 );

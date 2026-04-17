@@ -36,6 +36,10 @@ public class AssignmentConfiguration : IEntityTypeConfiguration<Assignment>
         builder.Property(a => a.UpdatedAt)
             .IsRequired();
         
+        builder.Property(a => a.SubmissionRequired)
+            .HasDefaultValue(true)
+            .IsRequired();
+        
         // Relationships
         builder.HasMany(a => a.Tasks)
             .WithOne(t => t.Assignment)

@@ -35,7 +35,7 @@ public static class CohortMappers
             cohort.CreatedByUserId,
             cohort.CreatedAt,
             cohort.Memberships.Select(MapToCohortMemberDto).ToList(),  // ← Full list
-            cohort.Assignments.Select(MapToAssignmentDto).ToList()     // ← Full list
+            cohort.Assignments.Select(AssignmentMappers.MapToAssignmentDto).ToList()     // ← Full list
         );
     }
     
@@ -61,7 +61,7 @@ public static class CohortMappers
             cohort.CreatedByUserId,
             cohort.CreatedAt,
             membersWithUserInfo,
-            cohort.Assignments.Select(MapToAssignmentDto).ToList()
+            cohort.Assignments.Select(AssignmentMappers.MapToAssignmentDto).ToList()
         );
     }
     
@@ -95,21 +95,6 @@ public static class CohortMappers
             membership.SponsorUserId,
             membership.JoinedDate,
             membership.CompletedDate
-        );
-    }
-    
-    public static AssignmentDto MapToAssignmentDto(Assignment assignment)
-    {
-        return new AssignmentDto(
-            assignment.Id,
-            assignment.Title,
-            assignment.Content,
-            assignment.CohortId,
-            assignment.DueDate,
-            assignment.IsTemplate,
-            assignment.CreatedByUserId,
-            assignment.CreatedAt,
-            assignment.Tasks.Count
         );
     }
     
